@@ -1,0 +1,6 @@
+pandas
+requests
+matplotlib
+sqlalchemy
+alpha_vantage
+yfinance
