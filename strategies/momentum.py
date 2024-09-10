@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def momentum_strategy(data, window=10):
     """
