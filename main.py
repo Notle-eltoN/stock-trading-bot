@@ -12,7 +12,7 @@ from utils.visualization import plot_stock_data
 from config.settings import ALPHA_VANTAGE_API_KEY
 
 # Global symbols list
-symbols = ['AAPL', 'GOOGL', 'TSLA']
+symbols = ['TQQQ','SPXL','UDOW','NVDA','AAPL', 'GOOGL', 'TSLA']
 
 # Create the SQLite engine and session
 engine = create_engine('sqlite:///db/stock_data.db')
