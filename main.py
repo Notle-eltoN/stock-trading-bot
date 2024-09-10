@@ -1,18 +1,20 @@
+
 import time
 import schedule
 from utils.api_handler import fetch_alpha_vantage_data
-from utils.db_handler import store_stock_price
-from utils.portfolio_tracker import calculate_portfolio_value, update_portfolio
+from utils.db_handler import store_stock_price, update_portfolio
 from strategies.moving_average import moving_average_strategy
 from strategies.rsi_strategy import rsi_strategy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db.create_db import StockPrice  # Import the model for stock prices
+from db.create_db import StockPrice, Portfolio  # Import the models
 from utils.visualization import plot_stock_data
 from config.settings import ALPHA_VANTAGE_API_KEY
+import io
 
 # Global symbols list
 symbols = ['TQQQ','SPXL','UDOW','NVDA','AAPL', 'GOOGL', 'TSLA']
+
 
 # Create the SQLite engine and session
 engine = create_engine('sqlite:///db/stock_data.db')
@@ -39,22 +41,14 @@ def fetch_store_analyze(symbol):
         
         # Step 4: Apply Moving Average Strategy
         ma_signals = moving_average_strategy(prices)
-        if ma_signals:
-            print(f"Moving Average Signals for {symbol}: {ma_signals}")
-
-        # Step 5: Apply RSI Strategy
-        rsi_signals = rsi_strategy(prices)
-        if rsi_signals:
-            print(f"RSI Signals for {symbol}: {rsi_signals}")
-
-        # Step 6: Log or Perform Buy/Sell Actions
-        # Example: If MA or RSI generates a "buy" signal, update portfolio
-        if ma_signals == 'buy' or rsi_signals == 'buy':
+        if ma_signals == 'buy':
             print(f"Buying {symbol}")
-            # Here you would perform an actual action, e.g., update the portfolio
-            update_portfolio(session, symbol, 10, 'buy')  # Example: Buy 10 units
+            update_portfolio(session, symbol, 10, 'buy')  # Example: Buy 10 shares
+        elif ma_signals == 'sell':
+            print(f"Selling {symbol}")
+            update_portfolio(session, symbol, 10, 'sell')  # Example: Sell 10 shares
 
-        # Step 7: Visualize stock data (optional)
+        # Step 5: Visualize stock data (optional)
         plot_stock_data(prices, title=f"{symbol} Stock Data")
 
 def fetch_and_analyze_all_symbols():

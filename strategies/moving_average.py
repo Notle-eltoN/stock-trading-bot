@@ -1,33 +1,42 @@
 import pandas as pd
 import numpy as np
 
+
 def calculate_sma(data, window):
     """
-    Calculate Simple Moving Average (SMA).
+    Calculate the Simple Moving Average (SMA).
     
-    :param data: Pandas Series of stock prices
-    :param window: The window size for the moving average
-    :return: Pandas Series of the SMA
+    :param data: List of stock prices
+    :param window: Window size for SMA
+    :return: Pandas Series of SMA
     """
-    return data.rolling(window=window).mean()
+    return pd.Series(data).rolling(window=window).mean()
 
-def moving_average_strategy(data, short_window=50, long_window=200):
+def moving_average_strategy(prices, short_window=40, long_window=100):
     """
     Simple Moving Average Crossover Strategy.
     
-    :param data: Pandas DataFrame with at least a 'Close' column
-    :param short_window: Window for short-term SMA
-    :param long_window: Window for long-term SMA
-    :return: Pandas DataFrame with buy/sell signals
+    :param prices: List of stock prices
+    :param short_window: Window size for short-term SMA
+    :param long_window: Window size for long-term SMA
+    :return: 'buy', 'sell', or None
     """
-    data['Short_SMA'] = calculate_sma(data['Close'], short_window)
-    data['Long_SMA'] = calculate_sma(data['Close'], long_window)
+    if len(prices) < long_window:
+        # Not enough data to calculate moving averages
+        print("Not enough data to calculate moving averages.")
+        return None
+
+    # Convert prices list to a DataFrame
+    data = pd.DataFrame(prices, columns=['Price'])
     
-    # Generate buy signals
-    data['Signal'] = 0
-    data['Signal'][short_window:] = np.where(data['Short_SMA'][short_window:] > data['Long_SMA'][short_window:], 1, 0)
+    # Calculate short-term and long-term SMAs
+    data['Short_SMA'] = calculate_sma(data['Price'], short_window)
+    data['Long_SMA'] = calculate_sma(data['Price'], long_window)
     
-    # Generate trade actions (1: buy, -1: sell)
-    data['Position'] = data['Signal'].diff()
-    
-    return data
+    # Signal generation logic
+    if data['Short_SMA'].iloc[-1] > data['Long_SMA'].iloc[-1]:  # If short SMA is greater than long SMA
+        return 'buy'
+    elif data['Short_SMA'].iloc[-1] < data['Long_SMA'].iloc[-1]:  # If short SMA is less than long SMA
+        return 'sell'
+    else:
+        return None
