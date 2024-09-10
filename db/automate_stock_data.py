@@ -5,7 +5,6 @@ import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from create_db import StockPrice  # Import your StockPrice model
-from config.settings import ALPHA_VANTAGE_API_KEY  # Make sure this file has your API key
 import sys
 sys.path.append('../')
 from config.settings import ALPHA_VANTAGE_API_KEY  # Ensure you have your API key here
@@ -51,20 +50,38 @@ def store_stock_price(stock_data):
     session.commit()
     print(f"Stored data for {stock_data['symbol']} at {stock_data['price']}")
 
-def fetch_and_store_for_all_symbols():
+def analyze_latest_prices(symbol):
     """
-    Fetch and store stock prices for multiple stock symbols.
+    Analyze the latest prices of a stock by calculating a moving average.
+    """
+    # Fetch the latest 10 stock prices for the symbol
+    latest_prices = session.query(StockPrice).filter_by(symbol=symbol).order_by(StockPrice.timestamp.desc()).limit(10).all()
+    
+    if latest_prices:
+        prices = [price.price for price in latest_prices]
+        moving_average = sum(prices) / len(prices)
+        print(f"Latest Moving Average for {symbol}: {moving_average}")
+    else:
+        print(f"No data available for {symbol}")
+
+# Modify this function to fetch, store, and analyze data
+def fetch_store_and_analyze():
+    """
+    Fetch stock prices, store them in the database, and analyze the latest prices for each symbol.
     """
     symbols = ['AAPL', 'GOOGL', 'TSLA']  # Add more symbols if needed
     for symbol in symbols:
         stock_data = fetch_stock_price(symbol)
         if stock_data:
             store_stock_price(stock_data)
+            analyze_latest_prices(symbol)  # Perform analysis after storing
 
-# Schedule the job to run every minute
-schedule.every(1).minutes.do(fetch_and_store_for_all_symbols)
+# Schedule the job to fetch, store, and analyze every minute
+schedule.every(1).minutes.do(fetch_store_and_analyze)
 
 # Keep running the schedule
 while True:
     schedule.run_pending()
     time.sleep(1)
+
+    
