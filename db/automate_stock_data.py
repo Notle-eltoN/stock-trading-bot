@@ -10,7 +10,7 @@ sys.path.append('../')
 from config.settings import ALPHA_VANTAGE_API_KEY  # Ensure you have your API key here
 import io
 
-
+symbols = ['TQQQ','SPXL','UDOW','NVDA','AAPL', 'GOOGL', 'TSLA']
 # Create a session to interact with the database
 engine = create_engine('sqlite:///stock_data.db')
 Session = sessionmaker(bind=engine)
@@ -84,4 +84,3 @@ while True:
     schedule.run_pending()
     time.sleep(1)
 
-    
