@@ -10,14 +10,6 @@ This is an automated stock trading bot built with Python that fetches real-time 
 - **Automated trading strategies** based on technical indicators
 - **Portfolio management**: Buy and sell signals update your portfolio
 
-## Tech Stack
-
-- **Python**: Main programming language
-- **SQLAlchemy**: For database interaction
-- **SQLite**: Local database for storing stock price data and portfolio
-- **Pandas**: For data manipulation and calculations
-- **Matplotlib**: For visualizing stock data
-- **Schedule**: For automating the bot to run at specific intervals
 
 ## Project Structure
 
