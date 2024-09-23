@@ -37,7 +37,7 @@ stock-trading-bot/
 │   ├── portfolio_tracker.py     # Portfolio management functions
 │   └── visualization.py         # Functions to visualize stock data
 │
-├── .gitignore                   # Ignore sensitive files (e.g., API keys, SQLite database)
-├── main.py                      # Main script to run the bot and trading logic
-└── requirements.txt             # Required Python libraries
+├── .gitignore                  
+├── main.py
+└── requirements.txt             
 
