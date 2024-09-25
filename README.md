@@ -5,10 +5,10 @@ This is an automated stock trading bot built with Python that fetches real-time 
 ## Features
 
 - **Fetch real-time stock data** from Alpha Vantage API
-- **Store stock price data** in an SQLite database
-- **Implement technical analysis** such as Moving Averages and RSI
-- **Automated trading strategies** based on technical indicators
-- **Portfolio management**: Buy and sell signals update your portfolio
+- **Store stock price data** 
+- **Implement technical analysis** Moving Averages and RSI
+- **Automated trading strategies** 
+- **Portfolio management**
 
 
 ## Project Structure
